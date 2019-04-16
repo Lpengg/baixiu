@@ -1,0 +1,228 @@
+﻿<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>欢迎登进入文章发布系统</title>
+
+    <link rel="stylesheet" type="text/css" href="/static/assets/vendors/login/css/styles.css">
+    <link rel="stylesheet" href="/static/assets/vendors/login/css/jigsaw.css">
+    <style>
+        #msg {
+            width: 100%;
+            line-height: 40px;
+            font-size: 14px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="jq22-container" style="padding-top:100px">
+    <div class="login-wrap">
+        <div class="login-html">
+            <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1" class="tab">登录</label>
+            <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab">注册</label>
+            <!-- 登陆表单 -->
+            <div class="login-form">
+                <form autocomplete="off">
+                    <div class="sign-in-htm">
+                        <div class="group">
+                            <label for="user" class="label">用户名</label>
+                            <input id="username" name="username" type="text" class="input"
+                                    {% if params.username %}
+                                   value="{{ params.username }}"
+                                    {% endif %}
+                            >
+                        </div>
+                        <div class="group">
+                            <label for="pass" class="label">密码</label>
+                            <input id="password" type="password" class="input" data-type="password" name="password"
+                                    {% if params.password %}
+                                   value="{{ params.password }}"
+                                    {% endif %}
+                            >
+                        </div>
+                        <div class="group">
+                            <div class="container">
+                                <div id="captcha" style="position: relative" data-type="password"></div>
+                                <div id="msg"></div>
+                            </div>
+                        </div>
+                        <div class="group">
+                            <input id="check" type="checkbox" class="check" checked name="isRem">
+                            <label for="check"><span class="icon"></span> 保持登录</label>
+                        </div>
+                        <div class="group">
+                            <input type="button" class="button" value="登录" id="btnLogin">
+                        </div>
+                        <div class="hr"></div>
+                        <!--
+                        <div class="foot-lnk">
+                            <a href="#forgot">忘记密码?</a>
+                        </div>
+                        -->
+                    </div>
+                </form>
+
+                <!-- 注册表单 -->
+                <form action="/admin/register" method="post" autocomplete="off" id="registerForm">
+                    <div class="sign-up-htm">
+                        <div class="group">
+                            <label for="username" class="label">用户名</label><i></i>
+                            <input id="uname" type="text" class="input" name="username"
+                                   placeholder="限制3-6个数字或字母，首个字符为小写字母">
+                            <span></span>
+                        </div>
+                        <div class="group">
+                            <label for="password" class="label">密码</label>
+                            <input id="pswd" type="password" class="input" name="password"
+                                   placeholder="限制6-16个字符(数字，字母，下划线)">
+                            <span></span>
+                        </div>
+                        <div class="group">
+                            <label for="confirm" class="label">重复密码</label>
+                            <input id="confirm" type="password" class="input" name="confirm"
+                                   placeholder="再次输入密码">
+                            <span></span>
+                        </div>
+                        <div class="group">
+                            <label for="nickname" class="label">昵称</label><i></i>
+                            <input id="nickname" type="text" class="input" placeholder="起一个独一无二的吧" name="nickname">
+                            <span></span>
+                        </div>
+                        <div class="group">
+{#                            <input type="submit" class="button" value="注册" id="btn-register">#}
+                            <button class="button" type="button" id="btn-register">注册</button>
+                        </div>
+                        <div class="hr"></div>
+                        <div class="foot-lnk">
+                            <label for="tab-1">已经成员?</label>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/static/assets/vendors/jquery/jquery.min.js"></script>
+<script>
+    $(function () {
+        //ajax进行登录
+        $('#btnLogin').click(function () {
+           var uname = $('#username').val();
+           var pswd = $('#password').val();
+           var isRem = $('#check').prop('checked')
+           if (uname && pswd){
+               $.post('/admin/login',{'uname':uname,'pswd':pswd,'isRem':isRem},function (res) {
+                if (res=='OK'){
+                    window.location.href="/admin/index";
+                }else {
+                    alert(res)
+                }
+               });
+           }else{
+               alert('账号或密码不能为空');
+           }
+        });
+
+        //验证注册用户名
+        $('#uname').blur(function () {
+            var uname = $(this).val();
+            var reg = /^[a-z][a-zA-Z0-9]{2,5}$/g;
+            if (reg.test(uname)) {
+                // 验证用户名是否已经存在
+                $.get('/admin/check-name', {name: uname}, function (res) {
+                    if (res == 'OK') {
+                        // 用户名不存zai 可以注册
+                        $('#uname').next('span').html('√').css('color', 'green');
+                        $('#uname').css('border', '1px solid green');
+                    } else {
+                        $('#uname').next('span').html('x').css('color', 'red');
+                        $('#uname').css('border', '1px solid red');
+                        $('#uname').prev('i').html(res);
+                    }
+                });
+            } else {
+                //用户名不符合规则
+                $(this).next('span').html('x').css('color', 'red');
+                $(this).css('border', '1px solid red');
+            }
+        });
+
+        //验证注册密码
+        $('#pswd').blur(function () {
+            var pswd = $(this).val();
+
+            var reg = /^[a-zA-Z0-9._]{6,16}$/g;
+            if (reg.test(pswd)) {
+                $(this).next('span').html('√').css('color', 'green');
+                $(this).css('border', '1px solid green');
+            } else {
+                $(this).next('span').html('x').css('color', 'red');
+                $(this).css('border', '1px solid red');
+            }
+        });
+        //比较确认密码
+
+        $('#confirm').blur(function () {
+            var pswd = $('#pswd').val();
+            var confirm = $(this).val();
+            if (pswd == confirm) {
+                $(this).next('span').html('√').css('color', 'green');
+                $(this).css('border', '1px solid green');
+            } else {
+                $(this).next('span').html('x').css('color', 'red');
+                $(this).css('border', '1px solid red');
+            }
+        });
+
+        //校验昵称
+        $('#nickname').blur(function () {
+            var nickname = $(this).val();
+            var reg = /^[\u4e00-\u9fa5_a-zA-Z0-9-]{2,5}$/g;
+            if (reg.test(nickname)) {
+                // 验证昵称是否已经存在
+                $.post('/admin/check-name', {name: nickname}, function (res) {
+                    if (res == 'OK') {
+                        // 用户名不存 可以注册
+                        $('#nickname').next('span').html('√').css('color', 'green');
+                        $('#nickname').css('border', '1px solid green');
+                    } else {
+                        $('#nickname').next('span').html('x').css('color', 'red');
+                        $('#nickname').css('border', '1px solid red');
+                        $('#nickname').prev('i').html(res);
+                    }
+                });
+            } else {
+                //用户名不符合规则
+                $(this).next('span').html('x').css('color', 'red');
+                $(this).css('border', '1px solid red');
+            }
+        });
+
+        //设置提交按钮
+        $('#btn-register').click(function () {
+                var uname = $('#uname').val()
+                var pswd = $('#pswd').val();
+                var confirm = $('#confirm').val();
+                var nickname = $('#nickname').val();
+                var sp1 = $('#uname').next('span').html();
+                var sp2 = $('#pswd').next('span').html();
+                var sp3 = $('#confirm').next('span').html();
+                var sp4 = $('#nickname').next('span').html();
+
+                if (!uname || !pswd || !confirm || !nickname || sp1 == 'x' || sp2 == 'x' || sp3 == 'x' || sp4 == 'x'){
+                    alert('请完整填写表单')
+                }else{
+                     $('#registerForm').submit();
+                }
+            });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>Settings &laquo; Admin</title>
+    <link rel="stylesheet" href="/static/assets/vendors/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/assets/vendors/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/assets/vendors/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/assets/css/admin.css">
+    <script src="/static/assets/vendors/nprogress/nprogress.js"></script>
+</head>
+<body>
+<script>NProgress.start()</script>
+
+<div class="main">
+
+    {% include '/admin/common/navbar.html' %}
+
+    <div class="container-fluid">
+        <div class="page-title">
+            <h1>网站设置</h1>
+        </div>
+        <!-- 有错误信息时展示 -->
+        <!-- <div class="alert alert-danger">
+          <strong>错误！</strong>发生XXX错误
+        </div> -->
+        <form action="/admin/settings" method="post" enctype="multipart/form-data" autocomplete="off"
+              class="form-horizontal">
+            <div class="form-group">
+                <label for="site_logo" class="col-sm-2 control-label">网站图标</label>
+                <div class="col-sm-6">
+                    <label class="form-image">
+                        <img id="showImg" style="display: none;background-color: red;">
+                        <input id="site_logo" name="site_logo" type="file" src="{{ params.options[0].val }}" accept="image/*">
+                        <i class="mask fa fa-upload"></i>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="site_name" class="col-sm-2 control-label">站点名称</label>
+                <div class="col-sm-6">
+                    <input id="site_name" name="site_name" class="form-control" type="type" placeholder="站点名称"
+                            value="{{ params.options[1].val }}" >
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="site_description" class="col-sm-2 control-label">站点描述</label>
+                <div class="col-sm-6">
+                    <textarea id="site_description" name="site_description" class="form-control" placeholder="站点描述"
+                              cols="30" rows="6">{{ params.options[2].val }}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="site_keywords" class="col-sm-2 control-label">站点关键词</label>
+                <div class="col-sm-6">
+                    <input id="site_keywords" name="site_keywords" class="form-control" type="type" placeholder="站点关键词"
+                    value="{{ params.options[3].val }}">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="site_footer" class="col-sm-2 control-label">版权信息</label>
+                <div class="col-sm-6">
+                    <input id="site_footer" name="site_footer" class="form-control" type="type" placeholder="版权信息" value="{{ params.options[4].val }}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-6">
+                    <button type="submit" class="btn btn-primary">保存设置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% include '/admin/common/aside.html' %}
+
+<script src="/static/assets/vendors/jquery/jquery.js"></script>
+<script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+<script>NProgress.done()</script>
+
+
+<script>
+    $(function () {
+        if ($('#site_logo').attr('src')) {
+            $url = $('#site_logo').attr('src');
+            $('#site_logo').siblings('#showImg').attr('src', $url).fadeIn()
+        }
+        // 当文件域文件选择发生改变过后，本地预览选择的图片
+        $('#site_logo').on('change', function () {
+            var file = $(this).prop('files')[0]
+            // 为这个文件对象创建一个 Object URL
+            var url = URL.createObjectURL(file)
+            $(this).siblings('#showImg').attr('src', url).fadeIn()
+        })
+    });
+</script>
+</body>
+</html>

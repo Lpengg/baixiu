@@ -1,0 +1,64 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>jQuery+CSS3文章点赞功能代码 - 站长素材</title>
+<!--样式表开始-->
+<link type="text/css" rel="stylesheet" href="Css/demo.css">
+<!--样式表结束-->
+<script type="text/javascript" src="Js/jquery-1.8.3.min.js"></script>
+</head>
+
+<body>
+
+<!--动态点赞开始-->
+<div class="text-content">
+	<h1>艾弗森、科比、詹姆斯，谁的得分能力更强？</h1>
+	<p>
+		科比、艾弗森、詹姆斯都是顶级的得分高手，科比进攻技巧多样、几乎没有攻击死角。艾弗森速度快如闪电、突破无解。詹姆斯身体素质惊人、碾压对手。<br />
+		科比：“飞侠”科比拥有完美的身体素质，娴熟的进攻技巧，加上超强的求胜欲望。成就了不可阻挡的科比。科比的6大绝招，招招致命，并且科比可以自由切换，这让防死科比成为了不可能完成的任务。那些所谓的科比终结者，最后只能成为科比变得更强的垫脚石。3节62分，单场81分，科比视得分如探囊取物。<br/>
+		艾弗森：“答案”艾弗森与科比同时出道，虽然身高矮了一些，但是艾弗森的得分能力毫不逊色。艾弗森的突破速度快如闪电，同时艾弗森拥有超强的弹跳、弹速也很快。艾弗森的敏捷性、柔韧性和协调性都非常的好，这让他的突破变得更加无解。艾弗森在球场上毫无畏惧，充满斗志，永不服输，4届得分王证明了他的实力。<br />
+		詹姆斯：“小皇帝”詹姆斯，有很好的大局观，当时同时，他也拥有超强的得分能力。身高2.03米，体重113公斤，却拥有着后卫一样的速度与控球技巧。刚刚出道的詹姆斯以突破为主，后来的詹姆斯中距离投篮也渐渐成熟，让詹姆斯变得更加难以防守。
+		<br><br>适用浏览器：360、FireFox、Chrome、Safari、Opera、傲游、搜狗、世界之窗. 不支持IE8及以下浏览器。
+		<br><br>来源：<a href="http://sc.chinaz.com/" target="_blank">站长素材</a>
+	</p>
+</div>
+<div class="praise">
+	<span id="praise"><img src="Images/zan.png" id="praise-img" /></span>
+	<span id="praise-txt">1455</span>
+	<span id="add-num"><em>+1</em></span>
+</div>
+<!--动态点赞结束-->
+
+<script>
+	/* @author:Romey
+	 * 动态点赞
+	 * 此效果包含css3，部分浏览器不兼容（如：IE10以下的版本）
+	*/
+	$(function(){
+		$("#praise").click(function(){
+			var praise_img = $("#praise-img");
+			var text_box = $("#add-num");
+			var praise_txt = $("#praise-txt");
+			var num=parseInt(praise_txt.text());
+			if(praise_img.attr("src") == ("Images/yizan.png")){
+				$(this).html("<img src='Images/zan.png' id='praise-img' class='animation' />");
+				praise_txt.removeClass("hover");
+				text_box.show().html("<em class='add-animation'>-1</em>");
+				$(".add-animation").removeClass("hover");
+				num -=1;
+				praise_txt.text(num)
+			}else{
+				$(this).html("<img src='Images/yizan.png' id='praise-img' class='animation' />");
+				praise_txt.addClass("hover");
+				text_box.show().html("<em class='add-animation'>+1</em>");
+				$(".add-animation").addClass("hover");
+				num +=1;
+				praise_txt.text(num)
+			}
+		});
+	})
+</script>
+</body>
+</html>
+

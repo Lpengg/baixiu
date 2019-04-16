@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>Add new post &laquo; Admin</title>
+    <link rel="stylesheet" href="/static/assets/vendors/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/assets/vendors/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/assets/vendors/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/assets/css/admin.css">
+    <script src="/static/assets/vendors/nprogress/nprogress.js"></script>
+    <style>
+        /*富文本编辑器初始高度*/
+        .ck-editor__editable {
+            min-height: 500px;
+        }
+    </style>
+</head>
+<body>
+<script>NProgress.start()</script>
+
+<div class="main">
+
+    {% include '/admin/common/navbar.html' %}
+
+    <div class="container-fluid">
+        <div class="page-title">
+            <h1>{% if params.modify_post %}
+                编辑文章
+            {% else %}写文章
+            {% endif %}</h1>
+        </div>
+        <!-- 有错误信息时展示 -->
+        {% if params.msg %}
+            <div class="alert {% if params.flg %}
+            alert-success
+            {% else %}
+            alert-danger
+            {% endif %}">
+                <strong>{{ params.msg }}</strong>
+            </div>
+        {% endif %}
+
+        <form action="/admin/post-add" method="post" autocomplete="off" enctype="multipart/form-data" class="row"
+              id="addFrom">
+            <div class="col-md-9">
+                <div class="form-group">
+                    <label for="title">标题</label><span style="margin-left: 10px;display: none"></span>
+                    <i></i>
+
+                    <input id="title" class="form-control input-lg" name="title" type="text" placeholder="文章标题"
+                            {% if params.modify_post %}
+                           value="{{ params.modify_post.title }}"
+                            {% endif %}
+                    >
+                    {% if params.modify_post %}
+                        <input type="hidden" name="id" value="{{ params.modify_post.id }}">
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="content">内容</label>
+                    <textarea htmlEscape="false" id="content" class="form-control input-lg" name="content" cols="30" rows="10"
+                              placeholder="内容">{% if params.modify_post %}{{ params.modify_post.content|safe }}
+                    {% endif %}</textarea>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="tags">别名</label>
+                    <input id="tags" class="form-control" name="tags" type="text" placeholder="tags"
+                            {% if params.modify_post %}
+                           value="{{ params.modify_post.tags }}"
+                            {% endif %}>
+
+                </div>
+                <div class="form-group">
+                    <label for="feature">特色图像</label>
+                    <!-- show when image chose -->
+                    <img class="help-block thumbnail" style="display: none">
+                    <input id="feature" class="form-control" name="feature" type="file"
+                           {% if params.modify_post and params.modify_post.feature %}src="{{ params.modify_post.feature }}"{% endif %}
+                           accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label for="category">所属分类</label>
+                    <select id="category" class="form-control" name="category">
+                        {% for cate in params.cates %}
+                            <option value="{{ cate.id }}"
+                                    {% if params.modify_post and cate.id == params.modify_post.category_id %}
+                                    selected
+                                    {% endif %}>{{ cate.cate_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="created">发布时间</label>
+                    <input id="created" class="form-control" name="created" type="datetime-local">
+                </div>
+                <div class="form-group">
+                    <label for="status">状态</label>
+                    <select id="status" class="form-control" name="status">
+                        <option value="drafted" {% if params.modify_post and params.modify_post.status=='drafted' %}
+                                selected
+                        {% endif %}>草稿
+                        </option>
+                        <option value="published" {% if params.modify_post and params.modify_post.status=='published' %}
+                                selected
+                        {% endif %}>已发布
+                        </option>
+                        <option value="trashed" {% if params.modify_post and params.modify_post.status=='trashed' %}
+                                selected
+                        {% endif %}>回收站
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="button">{% if params.modify_post %}保存
+                    {% else %}添加
+                    {% endif %}</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% include '/admin/common/aside.html' %}
+
+<script src="/static/assets/vendors/jquery/jquery.js"></script>
+<script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+<script src="/static/assets/vendors/moment/moment.js"></script>
+
+<script src="/static/assets/vendors/ckeditor5-build-classic/ckeditor.js"></script>
+<script src="/static/assets/vendors/ckeditor5-build-classic/translations/zh-cn.js"></script>
+
+<script>NProgress.done()</script>
+
+<script>
+    $(function () {
+        if ($('#feature').attr('src')) {
+            $url = $('#feature').attr('src');
+            $('#feature').siblings('.thumbnail').attr('src', $url).fadeIn()
+        }
+        // 当文件域文件选择发生改变过后，本地预览选择的图片
+        $('#feature').on('change', function () {
+            var file = $(this).prop('files')[0]
+            // 为这个文件对象创建一个 Object URL
+            var url = URL.createObjectURL(file)
+            // url => blob:http://zce.me/65a03a19-3e3a-446a-9956-e91cb2b76e1f
+            // 不用奇怪 BLOB: binary large object block
+            // 将图片元素显示到界面上（预览）
+
+            $(this).siblings('.thumbnail').attr('src', url).fadeIn()
+        })
+
+        // 发布时间初始值
+        $('#created').val(moment().format('YYYY-MM-DDTHH:mm'))
+
+        var title = null
+        if ($('#title').val()) {
+            var title = $('#title').val();
+        }
+
+        //校验标题为空和重复两种情况
+        $('#title').blur(function () {
+            if ($(this).val()) {
+                $.get('/admin/post-checkTitle', {'title': $(this).val(), 'flag': title}, function (res) {
+                    if (res == 'OK') {
+                        $('#title').css('border', '1px solid green');
+                        $('#title').prev('i').css('color', 'red').html(' ');
+                        $('#title').siblings('span').html(' ');
+                    } else {
+                        $('#title').css('border', '1px solid red');
+                        $('#title').prev('i').css('color', 'red').html(res);
+                        $('#title').siblings('span').html('x')
+                    }
+                });
+            } else {
+                $(this).css('border', '1px solid red');
+                $(this).prev('i').css('color', 'red').html('标题为空');
+                {#                $('.alert'.css('color', 'red').html('标题为空');#}
+                $(this).siblings('span').html('x');
+            }
+        });
+
+        $('.form-group .btn-primary').click(function () {
+            var val = $('#title').siblings('span').html()
+            var title = $('#title').val()
+            //有错误标志和标题为空就拒绝提交
+            if (val == 'x' || !title) {
+                console.log(1)
+            } else {
+                //设置表单提交
+                $('#addFrom').submit();
+            }
+        });
+
+        //富文本编辑器
+        ClassicEditor
+            .create(document.querySelector('#content'), {
+                language: 'zh-cn'
+            })
+            .then(newEditor => {
+                editor = newEditor;
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    });
+</script>
+</body>
+</html>

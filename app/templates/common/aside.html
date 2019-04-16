@@ -1,0 +1,50 @@
+<div class="aside">
+    <div class="widgets profile">
+        <div class="avatar">
+            <a href="{% if params.user %}/admin/index{% else %}/admin/login{% endif %}">
+                <img src="{% if params.user %}{{ params.user.avatar }}
+                            {% else %}/static/assets/img/default.png{% endif %}">
+            </a>
+        </div>
+        <h3 class="name" align="center"><a href="{% if params.user %}/admin/index{% else %}/admin/login{% endif %}">
+            {% if params.user %}{{ params.user.nickname }}{% else %}游客{% endif %}</a></h3>{% if params.user %}
+        {{ params.user.bio }}
+    {% else %}
+        <a href="/admin/login">
+            <button class="login a globalLoginBtn" type="submit">登录</button>
+        </a>
+    {% endif %}
+
+
+    </div>
+
+    <!--
+    <div class="widgets">
+        <h4>搜索</h4>
+        <div class="body search">
+            <form>
+                <input type="text" class="keys" placeholder="输入关键字">
+                <input type="submit" class="btn" value="搜索">
+            </form>
+        </div>
+    </div>
+    -->
+    <div class="widgets">
+        <h4>点击排行</h4>
+        <ul class="body random">
+
+            {% for cpost in params.click_posts %}
+                <li>
+                    <a href="/detail?post_id={{ cpost.id }}">
+                        <p class="title">{{ cpost.title }}</p>
+                        <p class="reading">阅读({{ cpost.views }})</p>
+                        <div class="pic">
+                            <img src="{{ cpost.feature }}" alt="">
+                        </div>
+                    </a>
+                </li>
+            {% endfor %}
+
+        </ul>
+    </div>
+</div>

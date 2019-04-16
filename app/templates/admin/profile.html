@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>Dashboard &laquo; Admin</title>
+    <link rel="stylesheet" href="/static/assets/vendors/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/assets/vendors/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/assets/vendors/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/assets/css/admin.css">
+    <script src="/static/assets/vendors/nprogress/nprogress.js"></script>
+</head>
+<body>
+<script>NProgress.start()</script>
+
+<div class="main">
+
+    {% include '/admin/common/navbar.html' %}
+
+    <div class="container-fluid">
+        <div class="page-title">
+            <h1>我的个人资料</h1>
+        </div>
+        <!-- 有错误信息时展示 -->
+        <!-- <div class="alert alert-danger">
+          <strong>错误！</strong>发生XXX错误
+        </div> -->
+        <form action="/admin/profile" method="post" class="form-horizontal" enctype="multipart/form-data" autocomplete="off">
+            <div class="form-group">
+                <label class="col-sm-3 control-label">头像</label>
+                <div class="col-sm-6">
+                    <label class="form-image">
+                        <img id="showImg" style="display: none">
+                        <input id="avatar" name="avatar" type="file" src="{{ params.user.avatar }}" accept="image/*">
+                        <i class="mask fa fa-upload"></i>
+                    </label>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="username" class="col-sm-3 control-label">用户名</label>
+                <div class="col-sm-6">
+                    <input id="username" class="form-control" name="username" type="type"
+                           value="{{ params.user.username }}" disabled>
+                    <p class="help-block">登录账号不允许修改</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="role" class="col-sm-3 control-label">角色</label>
+                <div class="col-sm-6">
+                    <input id="role" class="form-control" name="role" type="type"
+                           value="{% if params.user.role=='author' %}普通用户
+                    {% else %}管理员
+                    {% endif %}" disabled>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="nickname" class="col-sm-3 control-label">昵称</label>
+                <div class="col-sm-6">
+                    <input id="nickname" class="form-control" name="nickname" type="type"
+                           value="{{ params.user.nickname }}" placeholder="昵称">
+                    <p class="help-block">限制在 2-16 个字符</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="bio" class="col-sm-3 control-label">简介</label>
+                <div class="col-sm-6">
+                    <textarea id="bio" class="form-control" placeholder="Bio" cols="30" name="bio"
+                              rows="6">{{ params.user.bio }}</textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-3 col-sm-6">
+                    <button type="submit" class="btn btn-primary">更新</button>
+                    <a class="btn btn-link" href="/admin/password-reset">修改密码</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% include '/admin/common/aside.html' %}
+
+<script src="/static/assets/vendors/jquery/jquery.js"></script>
+<script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+<script>NProgress.done()</script>
+
+<script>
+    $(function () {
+        if ($('#avatar').attr('src')) {
+            $url = $('#avatar').attr('src');
+            $('#avatar').siblings('#showImg').attr('src', $url).fadeIn()
+        }
+        // 当文件域文件选择发生改变过后，本地预览选择的图片
+        $('#avatar').on('change', function () {
+            var file = $(this).prop('files')[0]
+            // 为这个文件对象创建一个 Object URL
+            var url = URL.createObjectURL(file)
+            $(this).siblings('#showImg').attr('src', url).fadeIn()
+        })
+    });
+</script>
+</body>
+</html>

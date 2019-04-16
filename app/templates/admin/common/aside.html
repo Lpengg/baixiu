@@ -1,0 +1,55 @@
+<div class="aside">
+    <div class="profile">
+        <img class="avatar" src="{{ params.user.avatar }}">
+        <h3 class="name">{{ params.user.nickname }}</h3>
+    </div>
+    <ul class="nav">
+        <li {% if params.isIndex %}class="active" {% endif %}>
+            <a href="/admin/index"><i class="fa fa-dashboard"></i>仪表盘</a>
+        </li>
+        <li>
+            <a href="#menu-posts" class="{% if not params.unfold %}collapsed{% endif %}" data-toggle="collapse"
+               {% if params.unfold %}aria-expanded="true"{% endif %}>
+                <i class="fa fa-thumb-tack"></i>文章<i class="fa fa-angle-right"></i>
+            </a>
+            <ul id="menu-posts" class="collapse {% if params.unfold %}in{% endif %}"
+                {% if params.unfold %}aria-expanded="true"{% endif %}>
+                <li {% if params.isPost %}class="active" {% endif %}><a href="/admin/posts">所有文章</a></li>
+                <li {% if params.isPostAdd %}class="active" {% endif %}><a href="/admin/post-add">写文章</a></li>
+
+                {% if session['role'] =='admin' %}
+                <li {% if params.isCate %}class="active" {% endif %}><a href="/admin/categories">分类目录</a></li>
+                {% endif %}
+
+            </ul>
+        </li>
+        <li {% if params.isComment %}class="active" {% endif %}>
+            <a href="/admin/comments"><i class="fa fa-comments"></i>评论</a>
+        </li>
+
+        {% if session['role'] =='admin' %}
+        <li {% if params.isUser %}class="active" {% endif %}>
+            <a href="/admin/users"><i class="fa fa-users"></i>用户</a>
+        </li>
+        {% endif %}
+
+        <li {% if params.isProfile %}class="active" {% endif %}>
+            <a href="/admin/profile"><i class="fa fa-user"></i>个人中心</a>
+        </li>
+
+        {% if session['role'] =='admin' %}
+        <li>
+            <a href="#menu-settings" class="{% if not params.isSet %}collapsed{% endif %}" data-toggle="collapse"
+               {% if params.isSet %}aria-expanded="true"{% endif %}>
+                <i class="fa fa-cogs"></i>设置<i class="fa fa-angle-right"></i>
+            </a>
+            <ul id="menu-settings" class="collapse {% if params.isSet %}in{% endif %}">
+                <li {% if params.isNavMenu %}class="active" {% endif %}><a href="/admin/nav-menus">导航菜单</a></li>
+                <li {% if params.isSlides %}class="active" {% endif %}><a href="/admin/slides">图片轮播</a></li>
+                <li {% if params.isSettings %}class="active" {% endif %}><a href="/admin/settings">网站设置</a></li>
+            </ul>
+        </li>
+        {% endif %}
+
+    </ul>
+</div>

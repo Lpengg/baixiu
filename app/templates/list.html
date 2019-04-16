@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>阿里百秀-发现生活，发现美!</title>
+    <link rel="stylesheet" href="/static/assets/vendors/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="/static/assets/vendors/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/assets/css/style.css">
+    <link rel="stylesheet" href="/static/assets/css/mycss.css">
+    <script src="/static/assets/vendors/jquery/jquery.min.js"></script>
+</head>
+<body>
+<div class="wrapper">
+    <div class="topnav">
+        <ul>
+            <li><a href="javascript:;"><i class="fa fa-glass"></i>奇趣事</a></li>
+            <li><a href="javascript:;"><i class="fa fa-phone"></i>潮科技</a></li>
+            <li><a href="javascript:;"><i class="fa fa-fire"></i>会生活</a></li>
+            <li><a href="javascript:;"><i class="fa fa-gift"></i>美奇迹</a></li>
+        </ul>
+    </div>
+
+    <!-- 左侧栏 -->
+    {% include '/common/header.html' %}
+    <!-- 右侧栏 -->
+    {% include '/common/aside.html' %}
+
+
+    <div class="content">
+        <div class="panel new">
+            <h3>{{ params.cate_name }}</h3>
+
+            {% for post in params.posts %}
+                <div class="entry">
+                    <div class="head">
+                        <a href="/detail?post_id={{ post.id }}">{{ post.title }}</a>
+                    </div>
+                    <div class="main">
+                        <p class="info">{{ post.users.nickname }} 发表于 {{ post.created }}</p>
+                        <p class="brief">
+                            {{ post.content|truncate(300)|safe }}
+                        </p>
+                        <p class="extra">
+                            <span class="reading">阅读({{ post.views }})</span>
+                            <span class="comment">评论({{ post.comments.count() }})</span>
+                            <a href="javascript:;" class="like">
+                                <i class="fa fa-thumbs-up"></i>
+                                <span>赞({{ post.likes }})</span>
+                            </a>
+                            <a href="javascript:;" class="tags">
+                                标签：<span>{{ post.tags }}</span>
+                            </a>
+                        </p>
+                        <a href="/detail?post_id={{ post.id }}" class="thumb">
+                            <img src="{{ post.feature }}" alt="">
+                        </a>
+                    </div>
+                </div>
+
+            {% endfor %}
+
+
+        </div>
+    </div>
+    <div class="footer">
+        <p>© 2016 XIU主题演示 本站主题由 themebetter 提供</p>
+    </div>
+</div>
+
+
+</body>
+</html>

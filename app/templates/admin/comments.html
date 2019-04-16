@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <title>Comments &laquo; Admin</title>
+    <link rel="stylesheet" href="/static/assets/vendors/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/static/assets/vendors/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/assets/vendors/nprogress/nprogress.css">
+    <link rel="stylesheet" href="/static/assets/css/admin.css">
+    <script src="/static/assets/vendors/nprogress/nprogress.js"></script>
+</head>
+<body>
+<script>NProgress.start()</script>
+
+<div class="main">
+    {% include '/admin/common/navbar.html' %}
+    <div class="container-fluid">
+        <div class="page-title">
+            <h1>所有评论</h1>
+        </div>
+        <!-- 有错误信息时展示 -->
+        <!-- <div class="alert alert-danger">
+          <strong>错误！</strong>发生XXX错误
+        </div> -->
+        <div class="page-action">
+            <!-- show when multiple checked -->
+            <a class="btn btn-danger btn-sm" href="/admin/comments-del" id="btnAll" style="display: none">批量删除</a>
+            <form action="" method="get" class="form-inline">
+                <select name="status" id="" class="form-control input-sm">
+                    <option value="all">所有状态</option>
+                    <option value="published" {% if params.status=='published' %}selected{% endif %}>允许</option>
+                    <option value="held" {% if params.status=='held' %}selected{% endif %}>待审</option>
+                    <option value="rejected" {% if params.status=='rejected' %}selected{% endif %}>驳回</option>
+                </select>
+                <button class="btn btn-default btn-sm">筛选</button>
+            </form>
+            <ul class="pagination pagination-sm pull-right">
+                <li><a href="/admin/comments?page=1{{ params.search }}">首页</a></li>
+                <li>
+                    <a href="/admin/comments?page={% if params.page==1 %}1{{ params.search }}{% else %}{{ params.page - 1 }}{{ params.search }}{% endif %}">上一页</a>
+                </li>
+
+                {% for x in range(params.beginPage,params.endPage + 1) %}
+                    <li {% if params.page==x %}class="active"{% endif %}><a
+                            href="/admin/comments?page={{ x }}{{ params.search }}">{{ x }}</a></li>
+                {% endfor %}
+
+                <li>
+                    <a href="/admin/comments?page={% if params.page==params.totalPage %}{{ params.totalPage }}{{ params.search }}{% else %}{{ params.page + 1 }}{{ params.search }}{% endif %}">下一页</a>
+                </li>
+                <li><a href="/admin/comments?page={{ params.totalPage }}{{ params.search }}">尾页</a></li>
+            </ul>
+        </div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+            <tr>
+                <th class="text-center" width="40"></th>
+                <th class="text-center" width="100px">作者</th>
+                <th class="text-center">评论</th>
+                <th class="text-center" width="150px">评论在</th>
+                <th class="text-center" width="160px">提交于</th>
+                <th class="text-center" width="50px">状态</th>
+                <th class="text-center" width="200px">操作</th>
+            </tr>
+            </thead>
+            <tbody>
+
+            {% for comment in params.comments %}
+                <tr {% if comment.status == 'held' %} class="warning" {% elif comment.status == 'rejected' %}
+                                                      class="danger" {% else %}class="success"{% endif %}>
+                    <td class="text-center"><input type="checkbox" data-id="{{ comment.id }}"></td>
+                    <td class="text-center">{{ comment.user.nickname }}</td>
+                    <td>{{ comment.content }}</td>
+                    <td class="text-center">《{{ comment.post.title }}》</td>
+                    <td>{{ comment.created }}</td>
+                    <td>{% if comment.status == 'published' %}
+                        允许
+                    {% elif comment.status == 'held' %}待审
+                    {% else %}
+                        驳回
+                    {% endif %}</td>
+                    <td class="text-center">
+                        {% if comment.status == 'held' %}
+                            <a href="/admin/comment-manage?id={{ comment.id }}&status=published"
+                               class="btn-allow btn btn-info btn-xs">批准</a>
+                            <a href="/admin/comment-manage?id={{ comment.id }}&status=rejected"
+                               class="btn btn-warning btn-xs">驳回</a>
+                            <a href="/admin/comments-del?id={{ comment.id }}" class="btn btn-danger btn-xs">删除</a>
+                        {% else %}
+                            <a href="/admin/comments-del?id={{ comment.id }}" class="btn btn-danger btn-xs">删除</a>
+                        {% endif %}
+
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% include '/admin/common/aside.html' %}
+
+<script src="/static/assets/vendors/jquery/jquery.js"></script>
+<script src="/static/assets/vendors/bootstrap/js/bootstrap.js"></script>
+<script>NProgress.done()</script>
+
+<script>
+    $(function () {
+        var btnAll = $('#btnAll');
+        var checks = $('tbody td input');
+        var checkedList = [];
+        checks.click(function () {
+            var id = $(this).attr('data-id')
+            if ($(this).prop('checked')) {
+                checkedList.push(id);
+            } else {
+                checkedList.splice(checkedList.indexOf(id), 1);
+            }
+            checkedList.length ? btnAll.fadeIn() : btnAll.fadeOut();
+            btnAll.prop('search', '?id=' + checkedList);
+        });
+    });
+</script>
+</body>
+</html>

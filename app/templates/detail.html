@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>阿里百秀-发现生活，发现美!</title>
+    <link rel="stylesheet" type="text/css" href="/static/assets/vendors/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/assets/css/style.css">
+    <link rel="stylesheet" href="/static/assets/vendors/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/assets/css/mycss.css">
+    <link type="text/css" rel="stylesheet" href="/static/assets/vendors/other-dianzan/Css/demo.css">
+    <script src="/static/assets/vendors/jquery/jquery.min.js"></script>
+
+</head>
+
+<body>
+<div class="wrapper">
+    <div class="topnav">
+        <ul>
+            <li><a href="javascript:;"><i class="fa fa-glass"></i>奇趣事</a></li>
+            <li><a href="javascript:;"><i class="fa fa-phone"></i>潮科技</a></li>
+            <li><a href="javascript:;"><i class="fa fa-fire"></i>会生活</a></li>
+            <li><a href="javascript:;"><i class="fa fa-gift"></i>美奇迹</a></li>
+        </ul>
+    </div>
+
+    <!-- 左侧栏 -->
+    {% include '/common/header.html' %}
+    <!-- 右侧栏 -->
+    {% include '/common/aside.html' %}
+
+
+    <div class="content">
+
+        <!-- 文章主体部分开始 -->
+        <div class="article">
+            <div class="breadcrumb" style="background-color: white">
+                <dl>
+                    <dt>当前位置：</dt>
+                    <dd>
+                        <a href="/list?cate={{ params.post.categories.slug }}">{{ params.post.categories.cate_name }}</a>
+                    </dd>
+                    <dd>{{ params.post.title }}</dd>
+                </dl>
+            </div>
+            <h2 class="title">
+                <a href="javascript:;">{{ params.post.title }}</a>
+            </h2>
+            <div class="meta">
+                <span>{{ params.post.users.nickname }} 发布于 {{ params.post.created }}</span>
+                <span>标签: <a href="javascript:;">{{ params.post.tags }}</a></span>
+                <span>阅读: ({{ params.post.views }})</span>
+                <span>评论: ({{ params.post.comments.count() }})</span>
+            </div>
+
+            <div class="article-content" style="font-size: 16px;line-height: 30px;">
+                {#                <p class="text">#}
+                {{ params.post.content|safe }}
+                {#                </p>#}
+            </div>
+
+        </div>
+        <!-- 文章主体部分结束 -->
+
+
+        <!-- 点赞开始 -->
+        <div id="content-praise">
+            <span id="praise"><img src="/static/assets/vendors/other-dianzan/Images/zan.png" id="praise-img"/></span>
+            <span id="praise-txt">{{ params.post.likes }}</span>
+            <span id="add-num"><em>+1</em></span>
+        </div>
+        <!-- 点赞结束 -->
+
+
+        <!-- 热门推荐开始 -->
+        <div class="panel hots">
+            <h3>热门推荐</h3>
+            <ul>
+                <li>
+                    <a href="javascript:;">
+                        <img src="/static/uploads/hots_2.jpg" alt="">
+                        <span>星球大战:原力觉醒视频演示 电影票68</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <img src="/static/uploads/hots_3.jpg" alt="">
+                        <span>你敢骑吗？全球第一辆全功能3D打印摩托车亮相</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <img src="/static/uploads/hots_4.jpg" alt="">
+                        <span>又现酒窝夹笔盖新技能 城里人是不让人活了！</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="javascript:;">
+                        <img src="/static/uploads/hots_5.jpg" alt="">
+                        <span>实在太邪恶！照亮妹纸绝对领域与私处</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- 热门推荐结束 -->
+
+
+        <!-- 评论部分开始 -->
+        <div class="comment-container">
+            <div class="commentbox">
+                <textarea cols="80" rows="50" placeholder="来说几句吧......" class="mytextarea" id="comment"></textarea>
+                <button id="btn_comment">评论</button>
+            </div>
+
+            <div class="comment-list">
+
+                {% for comment in params.comments %}
+                    <div class="comment-info">
+                        <header>
+                            <img src="{{ comment.user.avatar }}">
+                        </header>
+                        <div class="comment-right">
+                            <h4>{{ comment.user.nickname }}</h4>
+                            <div class="comment-content-header">
+                                <span><i class="glyphicon glyphicon-time"></i> {{ comment.created }}</span>
+                            </div>
+                            <p class="comment-content">{{ comment.content }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+
+            </div>
+            <!-- 评论部分结束 -->
+
+
+        </div>
+
+        <div class="footer">
+            <p>© 2016 XIU主题演示 本站主题由 themebetter 提供</p>
+        </div>
+    </div>
+
+    <script>
+
+        $(function () {
+            /* @author:Romey
+             * 动态点赞
+             * 此效果包含css3，部分浏览器不兼容（如：IE10以下的版本）
+             */
+            $("#praise").click(function () {
+                var praise_img = $("#praise-img");
+                var text_box = $("#add-num");
+                var praise_txt = $("#praise-txt");
+                var num = parseInt(praise_txt.text());  //获取初始赞的数量
+                if (praise_img.attr("src") == ("/static/assets/vendors/other-dianzan/Images/yizan.png")) {
+                    $(this).html(
+                        "<img src='/static/assets/vendors/other-dianzan/Images/zan.png' id='praise-img' class='animation' />");
+                    praise_txt.removeClass("hover");
+                    text_box.show().html("<em class='add-animation'>-1</em>");
+                    $(".add-animation").removeClass("hover");
+                    num -= 1;
+                    praise_txt.text(num)
+                } else {
+                    $(this).html(
+                        "<img src='/static/assets/vendors/other-dianzan/Images/yizan.png' id='praise-img' class='animation' />"
+                    );
+                    praise_txt.addClass("hover");
+                    text_box.show().html("<em class='add-animation'>+1</em>");
+                    $(".add-animation").addClass("hover");
+                    num += 1;
+                    praise_txt.text(num)
+                }
+                $.get('/dianzan', {'num': num, 'post_id': '{{ params.post.id }}'});
+            });
+
+
+            //评论部分
+            $('#btn_comment').click(function () {
+
+                var comment = $('#comment').val();
+                if (comment.length <= 3) {
+                    alert('评论内容不能小于少于四个字符');
+                } else {
+                    //发送ajax请求
+                    $.post('/add_comment', {'post_id': '{{ params.post.id }}', 'comment': comment}, function (data) {
+                        if (data == 'x') {
+                            alert('请登录后再来评论');
+                        } else {
+                            $('#comment').val(' ');
+                            var commentbody = $('<div class="comment-info">' +
+                                '<header>' +
+                                '<img src="' + data[0].avatar + '">' +
+                                '</header> ' +
+                                '<div class="comment-right"> ' +
+                                '<h3>' + data[0].user_nickname + '</h3> ' +
+                                '<div class="comment-content-header"> ' +
+                                '<span><i class="glyphicon glyphicon-time"></i> ' + data[0].created + '</span> ' +
+                                '</div> ' +
+                                '<p class="comment-content">' + data[0].content + '</p> </div> </div>');
+                            $('.comment-list').prepend(commentbody);
+                        }
+                    }, 'json');
+                }
+
+            });
+        });
+    </script>
+</body>
+
+</html>

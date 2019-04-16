@@ -1,0 +1,195 @@
+/* 评论样式 */
+.comment-container {
+    background-color: white;
+    padding-top: 10px;
+}
+
+.commentbox {
+    margin: 20px auto;
+}
+
+.commentbox .mytextarea {
+    display: block;
+    margin: 0 auto;
+    width: 95%;
+    overflow: auto;
+    word-break: break-all;
+    height: 100px;
+    color: #000;
+    font-size: 16px;
+    resize: none;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+.commentbox .mytextarea:focus {border: 1px solid #31b0d5;; }
+
+.commentbox #btn-comment {
+    color: #fff;
+    background-color: #5bc0de;
+    padding: 6px 12px;
+    line-height: 1.42857143;
+    cursor: pointer;
+
+    border: 1px solid transparent;
+    border-radius: 4px;
+    float: right;
+    margin-top: 10px;
+    margin-right: 20px;
+}
+
+.commentbox #btn-comment:active {
+    color: #fff;
+    background-color: #31b0d5;
+    /* border-color: #269abc; */
+    text-decoration: none;
+}
+
+.comment-list {
+
+    margin: 20px auto;
+    clear: both;
+    padding-top: 20px;
+}
+
+.comment-list .comment-info {
+    position: relative;
+    margin-bottom: 20px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ccc;
+}
+
+.comment-list .comment-info header {
+    width: 10%;
+    position: absolute;
+}
+
+.comment-list .comment-info header img {
+    width: 90%;
+    border-radius: 50%;
+    padding: 5px;
+}
+
+.comment-list .comment-info .comment-right {
+    padding: 5px 0px 5px 11%;
+}
+
+.comment-list .comment-info .comment-right h3 {
+    margin: 5px 0px;
+}
+
+.comment-list .comment-info .comment-right .comment-content-header {
+    height: 25px;
+}
+
+.comment-list .comment-info .comment-right .comment-content-header span,
+.comment-list .comment-info .comment-right .comment-content-footer span {
+    padding-right: 2em;
+    color: #aaa;
+}
+
+.comment-list .comment-info .comment-right .comment-content-header span {
+    cursor: pointer;
+}
+
+.comment-right .comment-content {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.42857143;
+    color: #333;
+    box-sizing: border-box;
+    margin: 0 0 10px;
+    display: block;
+    margin-right: 70px;
+}
+
+
+
+/* -----登录------ */
+.aside .profile {
+    width: 280px;
+    position: relative;
+    height: 120px;
+    padding: 15px 20px;
+
+}
+
+.aside .profile .avatar {
+    height: 80px;
+    width: 80px;
+    border: 3px solid rgba(255, 255, 255, .3);
+}
+
+.aside .profile .avatar img {
+    border-radius: 50%;
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    border: 1px solid deepskyblue;
+}
+
+.aside .profile .name {
+    font-size: 16px;
+    position: absolute;
+    top: 30px;
+    left: 150px;
+    color: #337ab7;
+}
+
+.aside .profile .name a:hover {
+    color: red;
+}
+
+.aside .profile .login {
+    font-size: 16px;
+    position: absolute;
+    top: 65px;
+    left: 127px;
+    line-height: 35px;
+    padding: 0 18px;
+    background-color: #bdece8;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    opacity: .9;
+    color: white;
+}
+
+.aside .profile .login:hover{
+    color: blueviolet;
+}
+
+
+
+
+/* 右侧随机推荐 */
+.aside .random li{
+    height: 80px;
+}
+
+/*首页导航栏鼠标进入事件*/
+.header>.nav>li>a:hover{
+    color: red;
+    background-color: white;
+}
+
+
+/*评论按钮*/
+#btn_comment{
+    color: #fff;
+    background-color: #5bc0de;
+    border-color: #46b8da;
+    float: right;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.42857143;
+    cursor: pointer;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    margin-right: 25px;
+    margin-top: 10px;
+
+}
